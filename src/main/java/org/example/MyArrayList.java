@@ -1,73 +1,8 @@
 package org.example;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 
-public class MyArrayList<E> implements InterfaceForMyList<E> {
-
-    public static void main(String[] args) {
-        MyArrayList<String> myArrayList = new MyArrayList<>();
-//        String[] str = new String[10];
-//        str[0] = "a";
-//        str[1] = "b";
-//        str[2] = "c";
-//        str[3] = "d";
-
-
-
-        myArrayList.add("0");
-        myArrayList.add("1");
-        myArrayList.add("2");
-        myArrayList.add("3");
-        myArrayList.add("4");
-        myArrayList.add("5");
-        myArrayList.add("6");
-        myArrayList.add("7");
-        myArrayList.add("8");
-
-        System.out.println("Исходный маcсив:");
-        for (String s : myArrayList) {
-            System.out.print(s + " ");
-        }
-        System.out.println();
-
-        System.out.println("Добавление элемента");
-        myArrayList.add("N");
-        for (String s : myArrayList) {
-            System.out.print(s + " ");
-        }
-        System.out.println();
-
-        System.out.println("Добавление элемента по индексу 1");
-        myArrayList.add("N", 1);
-        for (String s : myArrayList) {
-            System.out.print(s + " ");
-        }
-        System.out.println();
-
-        System.out.println("Удаление последнего элемента:");
-        myArrayList.delete(myArrayList.size()-1);
-
-        for (String s : myArrayList) {
-            System.out.print(s + " ");
-        }
-        System.out.println();
-
-        System.out.println("Реверс");
-        myArrayList = myArrayList.reverse();
-
-        for (String s : myArrayList) {
-            System.out.print(s + " ");
-        }
-        System.out.println();
-
-
-        System.out.println("Очистка");
-        myArrayList.clear();
-        System.out.print(myArrayList.size());
-    }
-
+public class MyArrayList<E> implements MyListInterface<E> {
     private E[] values;
 
     MyArrayList() {
@@ -147,16 +82,6 @@ public class MyArrayList<E> implements InterfaceForMyList<E> {
     }
 
     @Override
-    public void sort(Comparable<E> comparable) {
-
-    }
-
-    @Override
-    public void sort(Comparator<E> comparator) {
-
-    }
-
-    @Override
     public MyArrayList<E> reverse() {
         for(int i = 0; i < values.length / 2; i++)
         {
@@ -170,5 +95,59 @@ public class MyArrayList<E> implements InterfaceForMyList<E> {
     @Override
     public Iterator<E> iterator() {
         return new MyListIterator<>(values);
+    }
+
+    @Override
+    public void sort(Comparator<E> comparator) {
+        Arrays.sort(values, comparator); // сортируем его с пом компаратора
+    }
+
+    @Override
+    public void sort() {
+        if (this instanceof Comparable) {
+            quickSort(0, values.length - 1);
+        }
+        else {
+            E[] tempArray = (E[]) new Object();
+            System.arraycopy(values, 0, tempArray, 0,
+                    values.length);
+            //values = MyQuickSort.quicksort(tempArray);
+        }
+
+    }
+
+    private void quickSort(E[] values) {
+    }
+
+
+    private <E extends Comparable> void quickSort(int low, int high) {
+        if (low < high) {
+            int pi = partition(values, low, high);
+            quickSort(values, low, pi - 1);
+            quickSort(values, pi + 1, high);
+        }
+    }
+
+    private <E extends Comparable> int partition(E[] arr, int low, int high) {
+        E pivot = arr[high]; // ,
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (arr[j].compareTo(pivot) == -1) {
+                i++;
+
+
+                E temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+
+        E temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+
+        return i + 1;
     }
 }

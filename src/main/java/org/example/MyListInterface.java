@@ -2,7 +2,7 @@ package org.example;
 
 import java.util.Comparator;
 
-public interface InterfaceForMyList<E> extends Iterable<E> {
+public interface MyListInterface<E> extends Iterable<E> {
     boolean add(E e);
     boolean add(E e, int index);
     E get(int index);
@@ -10,7 +10,8 @@ public interface InterfaceForMyList<E> extends Iterable<E> {
     int size();
     void delete(int index);
     void clear();
-    void sort(Comparable<E> comparable);
+    void sort();
     void sort(Comparator<E> comparator);
-    InterfaceForMyList<E> reverse();
+
+    MyListInterface<E> reverse();
 }
