@@ -73,7 +73,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
 
     @Override
     public void clear() {
-
         try {
             values = (E[]) new Object[0];
         } catch(ClassCastException ex) {
@@ -82,14 +81,13 @@ public class MyArrayList<E> implements MyListInterface<E> {
     }
 
     @Override
-    public MyArrayList<E> reverse() {
+    public void reverse() {
         for(int i = 0; i < values.length / 2; i++)
         {
             E temp = values[i];
             values[i] = values[values.length - i - 1];
             values[values.length - i - 1] = temp;
         }
-        return new MyArrayList<E>(values);
     }
 
     @Override
@@ -102,39 +100,21 @@ public class MyArrayList<E> implements MyListInterface<E> {
         Arrays.sort(values, comparator); // сортируем его с пом компаратора
     }
 
-    @Override
-    public void sort() {
-        if (this instanceof Comparable) {
-            quickSort(0, values.length - 1);
-        }
-        else {
-            E[] tempArray = (E[]) new Object();
-            System.arraycopy(values, 0, tempArray, 0,
-                    values.length);
-            //values = MyQuickSort.quicksort(tempArray);
-        }
-
-    }
-
-    private void quickSort(E[] values) {
-    }
-
-
-    private <E extends Comparable> void quickSort(int low, int high) {
+    private <E> void quickSortByComparator(E[] values, int low, int high, Comparator<E> comparator) {
         if (low < high) {
-            int pi = partition(values, low, high);
-            quickSort(values, low, pi - 1);
-            quickSort(values, pi + 1, high);
+            int pi = partitionByComparator(values, low, high, comparator);
+
+            quickSortByComparator(values, low, pi - 1, comparator);
+            quickSortByComparator(values, pi + 1, high, comparator);
         }
     }
 
-    private <E extends Comparable> int partition(E[] arr, int low, int high) {
+    private <E> int partitionByComparator(E[] arr, int low, int high, Comparator<E> comparator) {
         E pivot = arr[high]; // ,
         int i = (low - 1);
         for (int j = low; j < high; j++) {
-            if (arr[j].compareTo(pivot) == -1) {
+            if (comparator.compare(arr[j], pivot) == -1) {
                 i++;
-
 
                 E temp = arr[i];
                 arr[i] = arr[j];
@@ -142,8 +122,44 @@ public class MyArrayList<E> implements MyListInterface<E> {
             }
         }
 
-
         E temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+
+        return i + 1;
+    }
+
+    @Override
+    public void sort() {
+            quickSort((Comparable[]) values, 0, values.length - 1);
+
+    }
+
+    private <E extends Comparable> void quickSort(Comparable[] values, int low, int high) {
+        if (low < high) {
+            int pi = partition(values, low, high);
+
+            quickSort(values, low, pi - 1);
+            quickSort(values, pi + 1, high);
+        }
+    }
+
+    private <E extends Comparable> int partition(Comparable[] arr, int low, int high) {
+        Comparable pivot = arr[high]; // ,
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (arr[j].compareTo(pivot) == -1) {
+                i++;
+
+
+                Comparable temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        Comparable temp = arr[i + 1];
         arr[i + 1] = arr[high];
         arr[high] = temp;
 

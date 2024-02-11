@@ -12,6 +12,5 @@ public interface MyListInterface<E> extends Iterable<E> {
     void clear();
     void sort();
     void sort(Comparator<E> comparator);
-
-    MyListInterface<E> reverse();
+    void reverse();
 }
