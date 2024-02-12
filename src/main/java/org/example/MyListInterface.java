@@ -10,6 +10,7 @@ public interface MyListInterface<E> extends Iterable<E> {
     int size();
     void delete(int index);
     void clear();
+    void trimToSize();
     void sort();
     void sort(Comparator<E> comparator);
     void reverse();

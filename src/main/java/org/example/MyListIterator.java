@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class MyListIterator<E> implements Iterator<E> {
@@ -7,8 +8,8 @@ public class MyListIterator<E> implements Iterator<E> {
     private int index = 0;
     private E[] values;
 
-    public MyListIterator(E[] values) {
-        this.values = values;
+    public MyListIterator(E[] values, int arraySize) {
+        this.values = Arrays.copyOf(values, arraySize);
     }
 
     @Override
