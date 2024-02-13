@@ -23,7 +23,7 @@ public class MyArrayListTest {
 
     @Test
     public void testAdd(){
-        MyObject o5 = new MyObject("f", 0);
+        MyObject o5 = new MyObject("a", 0);
         myArray.add(o5);
         Assertions.assertEquals(o5,
                 myArray.get(myArray.size() -1));
@@ -39,7 +39,7 @@ public class MyArrayListTest {
 
     @Test
     public void testGet() {
-        MyObject o5 = new MyObject("f", 0);
+        MyObject o5 = new MyObject("f", 10);
         myArray.add(o5, 0);
         Assertions.assertEquals(o5, myArray.get(0));
     }
@@ -76,6 +76,12 @@ public class MyArrayListTest {
     }
 
     @Test
+    public void testTrimToSize() {
+
+        myArray.trimToSize();
+    }
+
+    @Test
     public void testReverse() {
         String array = "[d1][b2][c3][a4]";
         myArray.reverse();
@@ -102,7 +108,7 @@ public class MyArrayListTest {
     public void testSortByComparator() {
         String arraySort = "[a4][b2][c3][d1]";
         MyComparator myC = new MyComparator();
-        myArray.sort(myC);
+        myArray.sortByComparator(myC);
         StringBuilder stringBuilder = new StringBuilder();
         for (Object e : myArray) {
             stringBuilder.append(e);
@@ -112,9 +118,9 @@ public class MyArrayListTest {
     }
 
     @Test
-    public  void testSort() {
+    public  void testSortByComparable() {
         String arraySort = "[d1][b2][c3][a4]";
-        myArray.sort();
+        myArray.sortByComparable();
         StringBuilder stringBuilder = new StringBuilder();
         for (Object e : myArray) {
             stringBuilder.append(e);

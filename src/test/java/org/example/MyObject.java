@@ -1,5 +1,8 @@
 package org.example;
 
+/** Вспомогательный класс, созданный для тестирования сортировки по Компэрабл
+ * */
+
 public class MyObject implements Comparable<MyObject>{
     private String str;
     private int number;

@@ -5,29 +5,31 @@ import java.util.*;
 /**
  * Параметризованный класс - список для хранения данных на
  * основе динамического массива.
+ *
  * @param <E>
  * @author efremychev_a
  * @version 1.0
- *
  */
 public class MyArrayList<E> implements MyListInterface<E> {
 
-
-    /** Поле идентификатор переменной, для хранения информации о
+    /**
+     * Поле идентификатор переменной, для хранения информации о
      * количестве хранящихся элементов
      * во внутреннем динамическом массиве.
      * Будет рассматриваться в данном классе,
      * как значение равное размеру списка.
-     * */
+     */
     private int arraySize;
 
-    /** Поле идентификатор динамического массива
-     * */
+    /**
+     * Поле идентификатор динамического массива
+     */
     private E[] values;
 
-    /** Конструктор класса.
+    /**
+     * Конструктор класса.
      * Инициализирует оба поля объекта класса
-     * */
+     */
     MyArrayList() {
         try {
             values = (E[]) new Object[0];
@@ -37,30 +39,20 @@ public class MyArrayList<E> implements MyListInterface<E> {
         arraySize = 0;
     }
 
-    /** Конструктор, принимающий в параметре готовый массив
+    /**
+     * Конструктор, принимающий в параметре готовый массив
      * элементов.
      * Инициализирует все поля класса.
-     * */
+     *
+     * @param values
+     */
     MyArrayList(E[] values) {
         this.values = values;
         arraySize = values.length;
     }
 
-
-
-    public static void main(String[] args) {
-        MyArrayList<Integer> myList = new MyArrayList<>();
-        ArrayList<Integer> list = new ArrayList<>();
-
-        long start = System.currentTimeMillis();
-        for(int i = 0; i < 1000000; i++) {
-            myList.add(1);
-        }
-        System.out.println("Массив заполнился за: " + (System.currentTimeMillis() - start));
-        System.out.println(myList.size());
-    }
-
-    /** Метод принимает в параметре элемент Е,
+    /**
+     * Метод принимает в параметре элемент Е,
      * который помещает в конец всего списка.
      * В случае если размер массива не позволяет поместить
      * элемент в конце, создается новый массив
@@ -69,7 +61,10 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * в параметрах элемент помещается в конец списка.
      * Размер списка инкрементируется.
      * Метод возвращает логическое значение.
-     * */
+     *
+     * @param e
+     * @return
+     */
     @Override
     public boolean add(E e) {
         try {
@@ -79,8 +74,7 @@ public class MyArrayList<E> implements MyListInterface<E> {
                 System.arraycopy(tempArray, 0, values, 0, arraySize - 1);
                 values[arraySize - 1] = e;
                 return true;
-            }
-            else {
+            } else {
                 values[arraySize] = e;
                 return true;
             }
@@ -91,7 +85,8 @@ public class MyArrayList<E> implements MyListInterface<E> {
         return false;
     }
 
-    /** Метод принимает в параметре элемент
+    /**
+     * Метод принимает в параметре элемент
      * E и числовой индекс.
      * В случае, если индекс равен размеру списка,
      * в целях избежания копирования,
@@ -104,10 +99,14 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * Запись ссылки на новый элемент Е в массив производится по заданному индексу.
      * Размер списка инкрементируется.
      * Метод возвращает логическое значение.
-     * */
+     *
+     * @param e
+     * @param index
+     * @return
+     */
     @Override
     public boolean add(E e, int index) {
-        if (index <= arraySize){
+        if (index == arraySize) {
             add(e);
             return true;
         }
@@ -134,37 +133,60 @@ public class MyArrayList<E> implements MyListInterface<E> {
         return false;
     }
 
-    /** Метод принимает в качестве параметра числовой индекс.
+    /**
+     * Метод принимает в качестве параметра числовой индекс.
      * Возвращает элемент Е из массива, хранящийся
-     * по заданному индексу
-     * */
+     * по заданному индексу.
+     * В случае, когда индекс больше размера списка,
+     * метод выбрасывает исключение IndexOutOfBoundsException.
+     *
+     * @param index
+     * @return
+     */
     @Override
     public E get(int index) {
+        if (index >= arraySize) {
+            throw new IndexOutOfBoundsException();
+        }
         return values[index];
     }
 
-    /** Метод принимает в качестве параметров числовой индекс
+    /**
+     * Метод принимает в качестве параметров числовой индекс
      * и элемент Е.
      * Производит запись элемента Е в массив по заданному индексу.
      * Прежнее значение ячейки массива не сохраняется.
-     * */
+     *
+     * @param index
+     * @param e
+     */
     @Override
     public void update(int index, E e) {
         values[index] = e;
     }
 
-    /** Метод возвращает количество хранящихся элементов
-     * в массиве.*/
+    /**
+     * Метод возвращает количество хранящихся элементов
+     * в массиве.
+     *
+     * @return
+     */
+
     @Override
     public int size() {
         return arraySize;
     }
 
-    /** Метод принимает в качестве параметра числовой индекс.
+    /**
+     * Метод принимает в качестве параметра числовой индекс.
      * Производит смещение всех элементов, начиная с заданного индекса
      * на -1 значение.
      * элемент, прежде хранящийся в массиве по заданному
      * индексу не сохраняется.
+     * В случае, когда индекс больше размера списка,
+     * метод выбрасывает исключение IndexOutOfBoundsException.
+     *
+     * @param index
      */
     @Override
     public void delete(int index) {
@@ -178,11 +200,12 @@ public class MyArrayList<E> implements MyListInterface<E> {
         arraySize--;
     }
 
-    /** Метод освобождает ссылку на массив данного объекта.
+    /**
+     * Метод освобождает ссылку на массив данного объекта.
      * В переменную массива записывается ссылся на новый пустой массив.
      * Размеру списка присваивается значение 0.
      * Ссылка на прежний массси не сохраняется.
-     * */
+     */
     @Override
     public void clear() {
         try {
@@ -193,9 +216,11 @@ public class MyArrayList<E> implements MyListInterface<E> {
         }
     }
 
-    /** Метод создает новый массив, размером, равным размеру списка
+    /**
+     * Метод создает новый массив, размером, равным размеру списка
      * и записывает в него все имеющиеся элементы.
-     * Переменной массива присваивается ссылка на новый массив.*/
+     * Переменной массива присваивается ссылка на новый массив.
+     */
     @Override
     public void trimToSize() {
         try {
@@ -207,9 +232,11 @@ public class MyArrayList<E> implements MyListInterface<E> {
         }
     }
 
-    /** Метод производит копирование элементов массива в новый массив
+    /**
+     * Метод производит копирование элементов массива в новый массив
      * в обратном порядке.
-     * В переменную массива записывается ссылка на новый массив.*/
+     * В переменную массива записывается ссылка на новый массив.
+     */
     @Override
     public void reverse() {
         for (int i = 0; i < values.length / 2; i++) {
@@ -219,117 +246,133 @@ public class MyArrayList<E> implements MyListInterface<E> {
         }
     }
 
-    /** Метод принимает в качестве параметров ссылку
+    /**
+     * Метод принимает в качестве параметров ссылку
      * на массив экземпляра
      * и числовое значение размера списка.
-     * возвращант итератор.*/
+     * возвращант итератор.
+     */
     @Override
     public Iterator<E> iterator() {
         return new MyListIterator<>(values, arraySize);
     }
 
-    /** Метод сортировки массива по Компаратору.
+    /**
+     * Метод сортировки массива по Компаратору.
      * В качестве параметра метод получает объект,
      * имплементирующий интерфейс Comparator<E>.
      * Сортировка массива производится по алгоритму QuickSort.
-     * */
+     *
+     * @param comparator
+     */
     @Override
-    public void sort(Comparator<E> comparator) {
-        Arrays.sort(values, comparator); // сортируем его с пом компаратора
+    public void sortByComparator(Comparator<E> comparator) {
+        quickSortByComparator(values, 0, arraySize - 1, comparator);
     }
 
     private <E> void quickSortByComparator(E[] values, int low, int high, Comparator<E> comparator) {
         if (low < high) {
             int pi = partitionByComparator(values, low, high, comparator);
-
             quickSortByComparator(values, low, pi - 1, comparator);
             quickSortByComparator(values, pi + 1, high, comparator);
         }
     }
 
-    /** Метод возвращает индекс элемента, относительно которого
+    /**
+     * Метод возвращает индекс элемента, относительно которого
      * произвел смещение элементов массива
-     * */
+     *
+     * @param arr
+     * @param low
+     * @param high
+     * @param comparator
+     * @param <E>
+     * @return
+     */
     private <E> int partitionByComparator(E[] arr, int low, int high, Comparator<E> comparator) {
         E pivot = arr[high]; // ,
         int i = (low - 1);
         for (int j = low; j < high; j++) {
-            if (comparator.compare(arr[j], pivot) == -1) {
+            if (comparator.compare(arr[j], pivot) < 0) {
                 i++;
-
                 E temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
         }
-
         E temp = arr[i + 1];
         arr[i + 1] = arr[high];
         arr[high] = temp;
-
-
         return i + 1;
     }
 
-    /** Метод сортировки массива для типов данных,
+    /**
+     * Метод сортировки массива для типов данных,
      * класс которых имплементирует интерфейс Comparable.
      * Сортировка массива производится по алгоритму QuickSort.
-     * */
+     */
     @Override
-    public void sort() {
-        quickSort((Comparable[]) values, 0, values.length - 1);
-
+    public void sortByComparable() {
+        quickSortByComparable((Comparable[]) values, 0, arraySize - 1);
     }
 
-    /** Метод реализует алгоритм QuickSort.
+    /**
+     * Метод реализует алгоритм QuickSort.
      * Принимает в качестве параметров ссылку на массив, который хранит в себе
      * данные, тип которых имплементирует интерфейс Comparable.
-     * */
-    private <E extends Comparable> void quickSort(Comparable[] values, int low, int high) {
+     *
+     * @param values
+     * @param low
+     * @param high
+     * @param <E>
+     */
+    private <E extends Comparable> void quickSortByComparable(Comparable[] values, int low, int high) {
         if (low < high) {
             int pi = partition(values, low, high);
 
-            quickSort(values, low, pi - 1);
-            quickSort(values, pi + 1, high);
+            quickSortByComparable(values, low, pi - 1);
+            quickSortByComparable(values, pi + 1, high);
         }
     }
 
-    /** Метод возвращает индекс элемента, относительно которого
+    /**
+     * Метод возвращает индекс элемента, относительно которого
      * произвел смещение элементов массива
-     * */
+     *
+     * @param arr
+     * @param low
+     * @param high
+     * @param <E>
+     * @return
+     */
     private <E extends Comparable> int partition(Comparable[] arr, int low, int high) {
         Comparable pivot = arr[high]; // ,
         int i = (low - 1);
         for (int j = low; j < high; j++) {
             if (arr[j].compareTo(pivot) == -1) {
                 i++;
-
-
                 Comparable temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
         }
-
         Comparable temp = arr[i + 1];
         arr[i + 1] = arr[high];
         arr[high] = temp;
-
-
         return i + 1;
     }
 
-    /** Вспомогательный метод.
+    /**
+     * Вспомогательный метод.
      * производит расширение массива, принадлежащего экземпляру данного класса..
-     * */
-    private E[] arrayExtension(){
+     */
+    private E[] arrayExtension() {
         E[] values = null;
         try {
             values = (E[]) new Object[(int) (arraySize * 1.5) + 1];
             return values;
         } catch (ClassCastException ex) {
         }
-       return values;
+        return values;
     }
-
 }
