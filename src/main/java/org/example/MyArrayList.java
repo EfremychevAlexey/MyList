@@ -5,7 +5,6 @@ import java.util.*;
 /**
  * Параметризованный класс - список для хранения данных на
  * основе динамического массива.
- *
  * @param <E>
  * @author efremychev_a
  * @version 1.0
@@ -43,7 +42,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * Конструктор, принимающий в параметре готовый массив
      * элементов.
      * Инициализирует все поля класса.
-     *
      * @param values
      */
     MyArrayList(E[] values) {
@@ -61,7 +59,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * в параметрах элемент помещается в конец списка.
      * Размер списка инкрементируется.
      * Метод возвращает логическое значение.
-     *
      * @param e
      * @return
      */
@@ -99,7 +96,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * Запись ссылки на новый элемент Е в массив производится по заданному индексу.
      * Размер списка инкрементируется.
      * Метод возвращает логическое значение.
-     *
      * @param e
      * @param index
      * @return
@@ -139,7 +135,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * по заданному индексу.
      * В случае, когда индекс больше размера списка,
      * метод выбрасывает исключение IndexOutOfBoundsException.
-     *
      * @param index
      * @return
      */
@@ -156,7 +151,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * и элемент Е.
      * Производит запись элемента Е в массив по заданному индексу.
      * Прежнее значение ячейки массива не сохраняется.
-     *
      * @param index
      * @param e
      */
@@ -168,10 +162,8 @@ public class MyArrayList<E> implements MyListInterface<E> {
     /**
      * Метод возвращает количество хранящихся элементов
      * в массиве.
-     *
      * @return
      */
-
     @Override
     public int size() {
         return arraySize;
@@ -185,7 +177,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * индексу не сохраняется.
      * В случае, когда индекс больше размера списка,
      * метод выбрасывает исключение IndexOutOfBoundsException.
-     *
      * @param index
      */
     @Override
@@ -262,7 +253,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * В качестве параметра метод получает объект,
      * имплементирующий интерфейс Comparator<E>.
      * Сортировка массива производится по алгоритму QuickSort.
-     *
      * @param comparator
      */
     @Override
@@ -281,7 +271,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
     /**
      * Метод возвращает индекс элемента, относительно которого
      * произвел смещение элементов массива
-     *
      * @param arr
      * @param low
      * @param high
