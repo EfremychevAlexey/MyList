@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 
 public class MyArrayListTest {
-    private MyArrayList<MyObject> myArray;
+    private MyArrayList<MyObject> myArray = new MyArrayList<>();
 
     @BeforeEach
     public void SetUp() {
@@ -16,9 +16,10 @@ public class MyArrayListTest {
         MyObject o2 = new MyObject("c", 3);
         MyObject o3 = new MyObject("b", 2);
         MyObject o4 = new MyObject("d", 1);
-
-        myArray = new MyArrayList<MyObject>(
-                new MyObject[]{o1, o2, o3, o4});
+        myArray.add(o1);
+        myArray.add(o2);
+        myArray.add(o3);
+        myArray.add(o4);
     }
 
     @Test
@@ -76,9 +77,14 @@ public class MyArrayListTest {
     }
 
     @Test
-    public void testTrimToSize() {
-
-        myArray.trimToSize();
+    public <E> void testToArray() {
+        String array = "[a4][c3][b2][d1]";
+        StringBuilder stringBuilder = new StringBuilder();
+        Object[] newArray = myArray.toArray();
+        for (Object m : newArray) {
+            stringBuilder.append(m);
+        }
+        Assertions.assertEquals(array, stringBuilder.toString());
     }
 
     @Test
@@ -103,29 +109,4 @@ public class MyArrayListTest {
         }
         Assertions.assertEquals(array, stringBuilder.toString());
     }
-
-    @Test
-    public void testSortByComparator() {
-        String arraySort = "[a4][b2][c3][d1]";
-        MyComparator myC = new MyComparator();
-        myArray.sortByComparator(myC);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Object e : myArray) {
-            stringBuilder.append(e);
-        }
-
-        Assertions.assertEquals(arraySort, stringBuilder.toString());
-    }
-
-    @Test
-    public  void testSortByComparable() {
-        String arraySort = "[d1][b2][c3][a4]";
-        myArray.sortByComparable();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Object e : myArray) {
-            stringBuilder.append(e);
-        }
-        Assertions.assertEquals(arraySort, stringBuilder.toString());
-    }
-
 }

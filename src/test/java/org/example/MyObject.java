@@ -1,6 +1,6 @@
 package org.example;
 
-/** Вспомогательный класс, созданный для тестирования сортировки по Компэрабл
+/** Вспомогательный класс тестов
  * */
 
 public class MyObject implements Comparable<MyObject>{
@@ -11,7 +11,6 @@ public class MyObject implements Comparable<MyObject>{
         this.str = str;
         this.number = number;
     }
-
 
     public String getStr() {
         return str;

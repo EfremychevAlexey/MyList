@@ -5,9 +5,10 @@ import java.util.*;
 /**
  * Параметризованный класс - список для хранения данных на
  * основе динамического массива.
+ *
  * @param <E>
  * @author efremychev_a
- * @version 1.0
+ * @version 1.01
  */
 public class MyArrayList<E> implements MyListInterface<E> {
 
@@ -18,34 +19,29 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * Будет рассматриваться в данном классе,
      * как значение равное размеру списка.
      */
-    private int arraySize;
+    private int arraySize = 0;
 
     /**
      * Поле идентификатор динамического массива
      */
-    private E[] values;
+    private Object[] values = new Object[0];
 
     /**
      * Конструктор класса.
      * Инициализирует оба поля объекта класса
      */
-    MyArrayList() {
-        try {
-            values = (E[]) new Object[0];
-        } catch (ClassCastException ex) {
-            ex.printStackTrace();
-        }
-        arraySize = 0;
+    public MyArrayList() {
     }
 
     /**
      * Конструктор, принимающий в параметре готовый массив
      * элементов.
      * Инициализирует все поля класса.
-     * @param values
+     *
+     * @param c
      */
-    MyArrayList(E[] values) {
-        this.values = values;
+    public MyArrayList(Collection<? extends E> c) {
+        this.values = c.toArray();
         arraySize = values.length;
     }
 
@@ -59,25 +55,28 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * в параметрах элемент помещается в конец списка.
      * Размер списка инкрементируется.
      * Метод возвращает логическое значение.
+     *
      * @param e
      * @return
      */
     @Override
     public boolean add(E e) {
-        try {
-            E[] tempArray = values;
-            if (values.length <= ++arraySize) {
-                values = arrayExtension();
-                System.arraycopy(tempArray, 0, values, 0, arraySize - 1);
-                values[arraySize - 1] = e;
-                return true;
-            } else {
-                values[arraySize] = e;
-                return true;
-            }
-
-        } catch (ClassCastException ex) {
-            ex.printStackTrace();
+        if (arraySize == 0) {
+            values = arrayExtension();
+            values[arraySize++] = e;
+            return true;
+        }
+        if (values.length <= arraySize) {
+            Object[] tempArray = arrayExtension();
+            System.arraycopy(values, 0, tempArray, 0, values.length);
+            tempArray[values.length] = e;
+            values = tempArray;
+            arraySize++;
+            return true;
+        }
+        if (values.length > arraySize) {
+            values[arraySize++] = e;
+            return true;
         }
         return false;
     }
@@ -96,6 +95,7 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * Запись ссылки на новый элемент Е в массив производится по заданному индексу.
      * Размер списка инкрементируется.
      * Метод возвращает логическое значение.
+     *
      * @param e
      * @param index
      * @return
@@ -106,8 +106,8 @@ public class MyArrayList<E> implements MyListInterface<E> {
             add(e);
             return true;
         }
-        if (index > arraySize + 1) {
-            throw new IndexOutOfBoundsException();
+        if (index > (arraySize + 1) || index < 0) {
+            throw new IndexOutOfBoundsException("Заданный индекс выходит за пределы массива.");
         } else {
             try {
                 E[] tempArray = (E[]) new Object[++arraySize - 1];
@@ -116,7 +116,6 @@ public class MyArrayList<E> implements MyListInterface<E> {
                 if (values.length < arraySize) {
                     values = arrayExtension();
                 }
-
                 System.arraycopy(tempArray, 0, values, 0, index);
                 values[index] = e;
                 System.arraycopy(tempArray, index, values, index + 1, tempArray.length - index);
@@ -135,11 +134,12 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * по заданному индексу.
      * В случае, когда индекс больше размера списка,
      * метод выбрасывает исключение IndexOutOfBoundsException.
+     *
      * @param index
      * @return
      */
     @Override
-    public E get(int index) {
+    public Object get(int index) {
         if (index >= arraySize) {
             throw new IndexOutOfBoundsException();
         }
@@ -151,6 +151,7 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * и элемент Е.
      * Производит запись элемента Е в массив по заданному индексу.
      * Прежнее значение ячейки массива не сохраняется.
+     *
      * @param index
      * @param e
      */
@@ -162,6 +163,7 @@ public class MyArrayList<E> implements MyListInterface<E> {
     /**
      * Метод возвращает количество хранящихся элементов
      * в массиве.
+     *
      * @return
      */
     @Override
@@ -177,14 +179,15 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * индексу не сохраняется.
      * В случае, когда индекс больше размера списка,
      * метод выбрасывает исключение IndexOutOfBoundsException.
+     *
      * @param index
      */
     @Override
     public void delete(int index) {
-        if ((arraySize < index)) {
-            throw new IndexOutOfBoundsException();
+        if ((arraySize <= index)) {
+            throw new IndexOutOfBoundsException("Значение индексы выходит за пределы массива");
         }
-        E[] tempArray = values;
+        Object[] tempArray = values;
         System.arraycopy(tempArray, 0, values, 0, index);
         System.arraycopy(tempArray, index + 1, values, index,
                 tempArray.length - index - 1);
@@ -200,11 +203,20 @@ public class MyArrayList<E> implements MyListInterface<E> {
     @Override
     public void clear() {
         try {
-            values = (E[]) new Object[0];
+            values = new Object[0];
             arraySize = 0;
         } catch (ClassCastException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Метод возвращает внутренний массив размером равным размеру листа.
+     */
+    @Override
+    public Object[] toArray() {
+        trimToSize();
+        return values;
     }
 
     /**
@@ -215,8 +227,8 @@ public class MyArrayList<E> implements MyListInterface<E> {
     @Override
     public void trimToSize() {
         try {
-            E[] tempArray = values;
-            values = (E[]) new Object[arraySize];
+            Object[] tempArray = values;
+            values = new Object[arraySize];
             System.arraycopy(tempArray, 0, values, 0, arraySize);
         } catch (ClassCastException ex) {
             ex.printStackTrace();
@@ -230,8 +242,9 @@ public class MyArrayList<E> implements MyListInterface<E> {
      */
     @Override
     public void reverse() {
+        trimToSize();
         for (int i = 0; i < values.length / 2; i++) {
-            E temp = values[i];
+            Object temp = values[i];
             values[i] = values[values.length - i - 1];
             values[values.length - i - 1] = temp;
         }
@@ -244,121 +257,18 @@ public class MyArrayList<E> implements MyListInterface<E> {
      * возвращант итератор.
      */
     @Override
-    public Iterator<E> iterator() {
+    public Iterator iterator() {
         return new MyListIterator<>(values, arraySize);
-    }
-
-    /**
-     * Метод сортировки массива по Компаратору.
-     * В качестве параметра метод получает объект,
-     * имплементирующий интерфейс Comparator<E>.
-     * Сортировка массива производится по алгоритму QuickSort.
-     * @param comparator
-     */
-    @Override
-    public void sortByComparator(Comparator<E> comparator) {
-        quickSortByComparator(values, 0, arraySize - 1, comparator);
-    }
-
-    private <E> void quickSortByComparator(E[] values, int low, int high, Comparator<E> comparator) {
-        if (low < high) {
-            int pi = partitionByComparator(values, low, high, comparator);
-            quickSortByComparator(values, low, pi - 1, comparator);
-            quickSortByComparator(values, pi + 1, high, comparator);
-        }
-    }
-
-    /**
-     * Метод возвращает индекс элемента, относительно которого
-     * произвел смещение элементов массива
-     * @param arr
-     * @param low
-     * @param high
-     * @param comparator
-     * @param <E>
-     * @return
-     */
-    private <E> int partitionByComparator(E[] arr, int low, int high, Comparator<E> comparator) {
-        E pivot = arr[high]; // ,
-        int i = (low - 1);
-        for (int j = low; j < high; j++) {
-            if (comparator.compare(arr[j], pivot) < 0) {
-                i++;
-                E temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-        }
-        E temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
-        return i + 1;
-    }
-
-    /**
-     * Метод сортировки массива для типов данных,
-     * класс которых имплементирует интерфейс Comparable.
-     * Сортировка массива производится по алгоритму QuickSort.
-     */
-    @Override
-    public void sortByComparable() {
-        quickSortByComparable((Comparable[]) values, 0, arraySize - 1);
-    }
-
-    /**
-     * Метод реализует алгоритм QuickSort.
-     * Принимает в качестве параметров ссылку на массив, который хранит в себе
-     * данные, тип которых имплементирует интерфейс Comparable.
-     *
-     * @param values
-     * @param low
-     * @param high
-     * @param <E>
-     */
-    private <E extends Comparable> void quickSortByComparable(Comparable[] values, int low, int high) {
-        if (low < high) {
-            int pi = partition(values, low, high);
-
-            quickSortByComparable(values, low, pi - 1);
-            quickSortByComparable(values, pi + 1, high);
-        }
-    }
-
-    /**
-     * Метод возвращает индекс элемента, относительно которого
-     * произвел смещение элементов массива
-     *
-     * @param arr
-     * @param low
-     * @param high
-     * @param <E>
-     * @return
-     */
-    private <E extends Comparable> int partition(Comparable[] arr, int low, int high) {
-        Comparable pivot = arr[high]; // ,
-        int i = (low - 1);
-        for (int j = low; j < high; j++) {
-            if (arr[j].compareTo(pivot) == -1) {
-                i++;
-                Comparable temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
-        }
-        Comparable temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
-        return i + 1;
     }
 
     /**
      * Вспомогательный метод.
      * производит расширение массива, принадлежащего экземпляру данного класса..
      */
-    private E[] arrayExtension() {
-        E[] values = null;
+    private Object[] arrayExtension() {
+        Object[] values = null;
         try {
-            values = (E[]) new Object[(int) (arraySize * 1.5) + 1];
+            values = new Object[(int) (arraySize * 1.5) + 1];
             return values;
         } catch (ClassCastException ex) {
         }

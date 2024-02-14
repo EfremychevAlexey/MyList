@@ -22,7 +22,6 @@ public interface MyListInterface<E> extends Iterable<E> {
      */
     boolean add(E e);
 
-
     /**
      * Метод добавления элемента по индексу
      *
@@ -38,7 +37,7 @@ public interface MyListInterface<E> extends Iterable<E> {
      * @param index
      * @return
      */
-    E get(int index);
+    Object get(int index);
 
     /**
      * Метод обновления элемента по индексу
@@ -68,21 +67,15 @@ public interface MyListInterface<E> extends Iterable<E> {
     void clear();
 
     /**
+     * Метод возвращает внутренний массив размером равным размеру листа
+     * @return
+     */
+    Object[] toArray();
+
+    /**
      * Метод для уменьшени размера внутреннего массива до размера списка
      */
     void trimToSize();
-
-    /**
-     * Метод сортировки по Comparable
-     */
-    void sortByComparable();
-
-    /**
-     * Метод сортировки по Compartor
-     *
-     * @param comparator
-     */
-    void sortByComparator(Comparator<E> comparator);
 
     /**
      * Метод для разворота списка
